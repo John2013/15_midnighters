@@ -1,7 +1,16 @@
 # Night Owls Detector
 
-[TODO. There will be project description]
+Определение пользователей, отправивших задачи на
+[DEVMAN.org](https://devman.org) ночью.
 
-# Project Goals
+# Как запустить
 
-The code is written for educational purposes. Training course for web-developers - [DEVMAN.org](https://devman.org)
+```bash
+python seek_dev_nighters.py # или python3
+```
+
+# Задачи проекта
+
+Код написан в целях обучения.
+Тренировочные курсы для web-разработчиков -
+[DEVMAN.org](https://devman.org)
