@@ -1,9 +1,5 @@
 from datetime import datetime, time
-from pprint import pprint
-
-from collections import defaultdict
 from pytz import timezone
-
 import requests
 
 
