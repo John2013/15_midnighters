@@ -12,7 +12,7 @@ def parse_args():
         '-p',
         type=int,
         default=10,
-        help='Количество страниц'
+        help='Количество страниц (по умолчанию 10)'
     )
 
     args = parser.parse_args()
