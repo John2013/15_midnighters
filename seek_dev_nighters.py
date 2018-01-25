@@ -36,5 +36,8 @@ def print_midnighters(midnighters):
 
 
 if __name__ == '__main__':
-    midnighters = get_midnighters(load_attempts())
-    print_midnighters(midnighters)
+    print_midnighters(
+        get_midnighters(
+            load_attempts()
+        )
+    )
