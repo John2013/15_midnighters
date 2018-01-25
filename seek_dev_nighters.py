@@ -1,49 +1,33 @@
 from datetime import datetime
 from pytz import timezone
 import requests
-from argparse import ArgumentParser
 
 
-def parse_args():
-    parser = ArgumentParser(description='Получить список сов девмана.')
-
-    parser.add_argument(
-        '--pages_count',
-        '-p',
-        type=int,
-        default=10,
-        help='Количество страниц (по умолчанию 10)'
-    )
-
-    args = parser.parse_args()
-
-    if args.pages_count <= 0:
-        parser.error(
-            'Количество страниц должно быть выше 0, задано: {}'.format(
-                args.pages_count
-            )
-        )
-
-    return args
-
-
-def load_attempts(pages_count):
+def load_attempts():
     url = 'https://devman.org/api/challenges/solution_attempts/'
-    for page in range(1, (pages_count + 1)):
-        attempts = requests.get(url, {'page': page}).json()['records']
+    page1 = requests.get(url, {'page': 1}).json()
+    pages_count = page1['number_of_pages']
+    for page_number in range(1, (pages_count + 1)):
+        if page_number == 1:
+            attempts = page1['records']
+        else:
+            attempts = requests.get(url, {'page': page_number}).json()[
+                'records'
+            ]
+
         for attempt in attempts:
             yield attempt
 
 
-def get_midnighters(pages_count):
+def get_midnighters():
     midnighters = set()
-    for user in load_attempts(pages_count):
+    for attempt in load_attempts():
         attempt_time = datetime.fromtimestamp(
-            user['timestamp'],
-            timezone(user['timezone'])
+            attempt['timestamp'],
+            timezone(attempt['timezone'])
         )
         if 0 < attempt_time.hour < 6:
-            midnighters.add(user['username'])
+            midnighters.add(attempt['username'])
 
     return midnighters
 
@@ -55,6 +39,5 @@ def print_midnighters(midnighters):
 
 
 if __name__ == '__main__':
-    args = parse_args()
-    midnighters = get_midnighters(args.pages_count)
+    midnighters = get_midnighters()
     print_midnighters(midnighters)
