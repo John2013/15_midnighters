@@ -1,4 +1,4 @@
-from datetime import datetime, time
+from datetime import datetime
 from pytz import timezone
 import requests
 from argparse import ArgumentParser
