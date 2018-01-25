@@ -1,9 +1,29 @@
 from datetime import datetime, time
 from pytz import timezone
 import requests
+from argparse import ArgumentParser
 
 
-def load_attempts(pages_count=10):
+def parse_args():
+    parser = ArgumentParser(description='Получить список сов девмана.')
+
+    parser.add_argument(
+        '--pages_count',
+        '-p',
+        type=int,
+        default=10,
+        help='Количество страниц'
+    )
+
+    args = parser.parse_args()
+
+    if args.pages_count <= 0:
+        parser.error("Количество страниц должно быть выше 0")
+
+    return args
+
+
+def load_attempts(pages_count):
     url = 'https://devman.org/api/challenges/solution_attempts/'
     for page in range(1, (pages_count + 1)):
         users = requests.get(url, {"page": page}).json()['records']
@@ -11,9 +31,9 @@ def load_attempts(pages_count=10):
             yield user
 
 
-def get_midnighters():
+def get_midnighters(pages_count):
     midnighters = set()
-    for user in load_attempts():
+    for user in load_attempts(pages_count):
         time_ = datetime.fromtimestamp(
             user['timestamp'],
             timezone(user['timezone'])
@@ -31,5 +51,6 @@ def print_midnighters(midnighters):
 
 
 if __name__ == '__main__':
-    midnighters = get_midnighters()
+    args = parse_args()
+    midnighters = get_midnighters(args.pages_count)
     print_midnighters(midnighters)
