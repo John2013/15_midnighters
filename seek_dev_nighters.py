@@ -30,19 +30,19 @@ def parse_args():
 def load_attempts(pages_count):
     url = 'https://devman.org/api/challenges/solution_attempts/'
     for page in range(1, (pages_count + 1)):
-        users = requests.get(url, {'page': page}).json()['records']
-        for user in users:
-            yield user
+        attempts = requests.get(url, {'page': page}).json()['records']
+        for attempt in attempts:
+            yield attempt
 
 
 def get_midnighters(pages_count):
     midnighters = set()
     for user in load_attempts(pages_count):
-        time_ = datetime.fromtimestamp(
+        attempt_time = datetime.fromtimestamp(
             user['timestamp'],
             timezone(user['timezone'])
         )
-        if 0 < time_.hour < 6:
+        if 0 < attempt_time.hour < 6:
             midnighters.add(user['username'])
 
     return midnighters
